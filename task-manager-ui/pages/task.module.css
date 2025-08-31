@@ -1,0 +1,235 @@
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Title with ripple/water underline effect */
+.title {
+  text-align: center;
+  font-size: 2rem; /* adjust size here */
+   margin: 0 auto 2rem auto;
+  font-weight: 700;
+  color: #f97316;
+  position: relative;
+  display: block; /* width matches text */
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: color 0.3s ease;
+}
+
+.title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #f97316 0%, #fb923c 50%, #f97316 100%);
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.5s ease;
+  border-radius: 2px;
+}
+
+.title:hover::after {
+  transform: translateX(-50%) scaleX(1);
+  animation: ripple 0.6s ease;
+}
+
+@keyframes ripple {
+  0% { transform: translateX(-50%) scaleX(0); opacity: 0.6; }
+  50% { transform: translateX(-50%) scaleX(1.2); opacity: 0.3; }
+  100% { transform: translateX(-50%) scaleX(1); opacity: 0.6; }
+}
+
+/* Form inputs and buttons */
+.formGroup {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.formGroup input,
+.formGroup select {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 1rem;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
+  border-color: #f97316;
+}
+
+.formGroup button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #f97316;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+  position: relative;
+  overflow: hidden; /* for ripple */
+}
+
+.formGroup button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+  background-color: #fb923c;
+}
+
+.formGroup button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+
+.formGroup button:hover::after {
+  width: 200%;
+  height: 500%;
+  opacity: 1;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
+}
+
+/* Task Grid */
+.taskGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Task Card */
+.taskCard {
+  border: 2px solid #f97316;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease, border-color 0.3s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.taskCard:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(249, 115, 22, 0.3);
+  border-color: #fb923c;
+}
+
+/* Status full-width */
+.fullWidthStatus {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem 0;
+  border-radius: 4px;
+  font-weight: 500;
+  color: white;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  cursor: default;
+}
+
+.fullWidthStatus:hover {
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.8);
+}
+
+.pending { background-color: #f97316; }
+.inProgress { background-color: #facc15; color: black; }
+.completed { background-color: #22c55e; }
+
+/* Task Buttons */
+.taskButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.taskButtons button {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.taskButtons button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+
+.taskButtons button:hover::after {
+  width: 200%;
+  height: 500%;
+  opacity: 1;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
+}
+
+.taskButtons button:first-child {
+  background-color: #1e40af;
+  color: white;
+}
+
+.taskButtons button:first-child:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.taskButtons button:last-child {
+  background-color: #dc2626;
+  color: white;
+}
+
+.taskButtons button:last-child:hover {
+  background-color: #ef4444;
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* No Tasks */
+.noTasks {
+  color: #aaa;
+  grid-column: 1/-1;
+  text-align: center;
+}
