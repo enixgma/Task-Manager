@@ -1,4 +1,3 @@
-/* Container */
 .container {
   max-width: 1000px;
   margin: 2rem auto;
@@ -6,15 +5,14 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Title with ripple/water underline effect */
 .title {
   text-align: center;
-  font-size: 2rem; /* adjust size here */
-   margin: 0 auto 2rem auto;
+  font-size: 2rem;
+  margin: 0 auto 2rem auto;
   font-weight: 700;
-  color: #f97316;
+  color: #070707;
   position: relative;
-  display: block; /* width matches text */
+  display: block;
   cursor: pointer;
   margin-bottom: 2rem;
   transition: color 0.3s ease;
@@ -27,7 +25,7 @@
   bottom: -6px;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, #f97316 0%, #fb923c 50%, #f97316 100%);
+  background: linear-gradient(90deg, #0e0b0c 0%, #6d6761 50%, #beb9b6 100%);
   transform: translateX(-50%) scaleX(0);
   transform-origin: center;
   transition: transform 0.5s ease;
@@ -45,7 +43,85 @@
   100% { transform: translateX(-50%) scaleX(1); opacity: 0.6; }
 }
 
-/* Form inputs and buttons */
+.layout {
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  background: #141518;
+  color: white;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+.sidebar h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 1rem 0;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem;
+}
+
+.dashboard {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.dashboard .card {
+  flex: 1;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  color: #333;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.dashboard .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.dashboard .pending {
+  border: none;
+  background-color: #fff;
+  color: #ad4c10;
+}
+
+.dashboard .inProgress {
+  background-color: #e0f2fe;
+  border: none;
+  color: #075985;
+}
+
+.dashboard .completed {
+  background-color: #dcfce7;
+  border: none;
+  color: #166534;
+}
+
 .formGroup {
   display: flex;
   gap: 1rem;
@@ -61,6 +137,9 @@
   border: 1px solid #ccc;
   outline: none;
   font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  min-width: 250px;
+  height: 48px;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
@@ -74,162 +153,144 @@
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 6px;
-  background-color: #f97316;
-  color: white;
+  background-color: #030303;
+  color: #f8f6f6;
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
   position: relative;
-  overflow: hidden; /* for ripple */
+  overflow: hidden;
+  height: 48px;
 }
 
 .formGroup button:hover {
   opacity: 0.9;
   transform: scale(1.05);
-  background-color: #fb923c;
+  color: #141414;
+  background-color: #ffffff;
 }
 
-.formGroup button::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
-  opacity: 0;
-}
-
-.formGroup button:hover::after {
-  width: 200%;
-  height: 500%;
-  opacity: 1;
-  transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
-}
-
-/* Task Grid */
-.taskGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-/* Task Card */
-.taskCard {
-  border: 2px solid #f97316;
-  border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease, border-color 0.3s ease;
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fadeInUp 0.5s forwards;
-}
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.taskCard:hover {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 12px 25px rgba(249, 115, 22, 0.3);
-  border-color: #fb923c;
-}
-
-/* Status full-width */
-.fullWidthStatus {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 0.5rem 0;
-  border-radius: 4px;
-  font-weight: 500;
-  color: white;
-  transition: box-shadow 0.3s ease, background-color 0.3s ease;
-  cursor: default;
-}
-
-.fullWidthStatus:hover {
-  box-shadow: 0 0 12px rgba(249, 115, 22, 0.8);
-}
-
-.pending { background-color: #f97316; }
-.inProgress { background-color: #facc15; color: black; }
-.completed { background-color: #22c55e; }
-
-/* Task Buttons */
-.taskButtons {
+.searchFilter {
   display: flex;
   gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
-.taskButtons button {
+.searchFilter input,
+.searchFilter select {
   flex: 1;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  min-width: 250px;
+  height: 48px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.searchFilter input:focus,
+.searchFilter select:focus {
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
+  border-color: #f97316;
+}
+
+.searchFilter button {
+  padding: 0.75rem 1.5rem;
   border: none;
+  border-radius: 6px;
+  background-color: #030303;
+  color: #f8f6f6;
+  font-weight: 600;
+  cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
   position: relative;
   overflow: hidden;
+  height: 48px;
 }
 
-.taskButtons button::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
-  opacity: 0;
+.searchFilter button:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+  color: #141414;
+  background-color: #ffffff;
 }
 
-.taskButtons button:hover::after {
-  width: 200%;
-  height: 500%;
-  opacity: 1;
-  transition: width 0.4s ease, height 0.4s ease, opacity 0.6s ease;
+.taskTableWrapper {
+  overflow-x: auto;
 }
 
-.taskButtons button:first-child {
-  background-color: #1e40af;
+.taskTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.taskTable th,
+.taskTable td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.taskTable th {
+  background: #141518;
   color: white;
 }
 
-.taskButtons button:first-child:hover {
-  background-color: #2563eb;
-  transform: scale(1.05);
-  opacity: 0.9;
+.status.pending {
+  background: #f97316;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  text-transform: capitalize;
 }
 
-.taskButtons button:last-child {
+.status.inprogress {
+  background: #facc15;
+  color: black;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  text-transform: capitalize;
+}
+
+.status.completed {
+  background: #22c55e;
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  text-transform: capitalize;
+}
+
+.taskTable button {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.taskTable button:first-child {
+  background-color: #141518;
+  color: white;
+}
+
+.taskTable button:first-child:hover {
+  background-color: #4d4f53;
+}
+
+.taskTable button:last-child {
   background-color: #dc2626;
   color: white;
 }
 
-.taskButtons button:last-child:hover {
+.taskTable button:last-child:hover {
   background-color: #ef4444;
-  transform: scale(1.05);
-  opacity: 0.9;
 }
 
-/* No Tasks */
 .noTasks {
   color: #aaa;
-  grid-column: 1/-1;
   text-align: center;
 }

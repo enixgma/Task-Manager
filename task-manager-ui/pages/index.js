@@ -1,143 +1,184 @@
 import { useEffect, useState } from "react";
-import { getTasks, createTask, updateTask, deleteTask } from "../services/api";
+import {
+  getTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+} from "../services/api";
 import styles from "./task.module.css";
+
+const capitalizeWords = (str) =>
+  str.replace(/\b\w/g, (char) => char.toUpperCase());
 
 export default function Home() {
   const [tasks, setTasks] = useState([]);
-  const [displayedTasks, setDisplayedTasks] = useState([]);
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [keyword, setKeyword] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-
-  // Fetch all tasks
-  const fetchTasks = async () => {
-    const data = await getTasks();
-    setTasks(data);
-    setDisplayedTasks(data);
-  };
+  const [status, setStatus] = useState("pending");
+  const [editId, setEditId] = useState(null);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    fetchTasks();
+    loadTasks();
   }, []);
 
-  // Add task
-  const handleCreate = async () => {
-    if (!title || !description) return;
-    await createTask({ title, description, status: "pending" });
+  const loadTasks = async () => {
+    const res = await getTasks();
+    setTasks(res);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!title.trim()) {
+      alert("Task cannot be empty!");
+      return;
+    }
+
+    if (editId) {
+      await updateTask(editId, { title: title.trim(), status });
+      setEditId(null);
+    } else {
+      await createTask({ title: title.trim(), status });
+    }
+
     setTitle("");
-    setDescription("");
-    fetchTasks();
+    setStatus("pending");
+    loadTasks();
   };
 
-  // Update status
-  const handleUpdateStatus = async (task) => {
-    const nextStatus =
-      task.status === "pending"
-        ? "in-progress"
-        : task.status === "in-progress"
-        ? "completed"
-        : "pending";
-    await updateTask(task._id, { status: nextStatus });
-    fetchTasks();
+  const handleEdit = (task) => {
+    setTitle(task.title);
+    setStatus(task.status);
+    setEditId(task._id);
   };
 
-  // Delete task
   const handleDelete = async (id) => {
-    await deleteTask(id);
-    fetchTasks();
+    if (window.confirm("Are you sure you want to delete this task?")) {
+      await deleteTask(id);
+      loadTasks();
+    }
   };
 
-  // Apply search + filter
-  const handleApply = () => {
-    let filtered = tasks;
-
-    if (keyword) {
-      filtered = filtered.filter(
-        (task) =>
-          task.title.toLowerCase().includes(keyword.toLowerCase()) ||
-          task.description.toLowerCase().includes(keyword.toLowerCase())
-      );
-    }
-
-    if (statusFilter) {
-      filtered = filtered.filter((task) => task.status === statusFilter);
-    }
-
-    setDisplayedTasks(filtered);
+  const counts = {
+    pending: tasks.filter((t) => t.status === "pending").length,
+    inProgress: tasks.filter((t) => t.status === "in progress").length,
+    completed: tasks.filter((t) => t.status === "completed").length,
   };
+
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = task.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesFilter = filter === "all" || task.status === filter;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Task Manager</h1>
+    <div className={styles.layout}>
+      <aside className={styles.sidebar}>
+        <h2>Task Manager</h2>
+        <ul>
+          <li>
+            <a href="#dashboard">Dashboard</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+        </ul>
+      </aside>
 
-      {/* Add Task */}
-      <div className={styles.formGroup}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button onClick={handleCreate}>Add</button>
-      </div>
-
-      {/* Search & Filter */}
-      <div className={styles.formGroup}>
-        <input
-          type="text"
-          placeholder="Search tasks..."
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="">All Status</option>
-          <option value="pending">Pending</option>
-          <option value="in-progress">In-Progress</option>
-          <option value="completed">Completed</option>
-        </select>
-        <button onClick={handleApply}>Apply</button>
-      </div>
-
-      {/* Task List */}
-      <div className={styles.taskGrid}>
-        {displayedTasks.length === 0 && <p className="text-gray-400">No tasks found.</p>}
-        {displayedTasks.map((task) => (
-          <div key={task._id} className={styles.taskCard}>
-            <div>
-              <h2 className={task.status === "completed" ? "line-through" : ""}>
-                {task.title}
-              </h2>
-              <p>{task.description}</p>
-            </div>
-
-            {/* Full width status */}
-            <span className={`status ${task.status} ${styles.fullWidthStatus}`}>
-              {task.status}
-            </span>
-
-            {/* Buttons */}
-            <div className={styles.taskButtons}>
-              <button onClick={() => handleUpdateStatus(task)}>Update Status</button>
-              <button
-                className={styles.deleteBtn}
-                onClick={() => handleDelete(task._id)}
-              >
-                Delete
-              </button>
-            </div>
+      <main className={styles.mainContent}>
+        <section id="dashboard" className={styles.dashboard}>
+          <div className={`${styles.card} ${styles.pending}`}>
+            Pending: {counts.pending}
           </div>
-        ))}
-      </div>
+          <div className={`${styles.card} ${styles.inProgress}`}>
+            In Progress: {counts.inProgress}
+          </div>
+          <div className={`${styles.card} ${styles.completed}`}>
+            Completed: {counts.completed}
+          </div>
+        </section>
+
+        <section id="tasks" className={styles.tasksSection}>
+          <form onSubmit={handleSubmit} className={styles.formGroup}>
+            <input
+              type="text"
+              placeholder="Enter task..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+            <select value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option value="pending">Pending</option>
+              <option value="in progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+            <button type="submit">
+              {editId ? "Update Task" : "Add Task"}
+            </button>
+          </form>
+
+          <div className={styles.searchFilter}>
+            <input
+              type="text"
+              placeholder="Search tasks..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+              <option value="all">All</option>
+              <option value="pending">Pending</option>
+              <option value="in progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+            <button type="button">Search</button>
+          </div>
+
+          <div className={styles.taskTableWrapper}>
+            <table className={styles.taskTable}>
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTasks.length > 0 ? (
+                  filteredTasks.map((task) => (
+                    <tr key={task._id}>
+                      <td>{task.title}</td>
+                      <td>
+                        <span
+                          className={`${styles.status} ${
+                            styles[task.status.replace(" ", "")]
+                          }`}
+                        >
+                          {capitalizeWords(task.status)}
+                        </span>
+                      </td>
+                      <td>
+                        <button onClick={() => handleEdit(task)}>Edit</button>
+                        <button onClick={() => handleDelete(task._id)}>
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className={styles.noTasks}>
+                      No tasks available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
